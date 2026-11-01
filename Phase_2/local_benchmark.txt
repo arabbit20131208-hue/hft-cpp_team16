@@ -1,0 +1,2 @@
+map p50_ns=694 p99_ns=909 snapshots_per_s=1.11857e+06
+flat p50_ns=265 p99_ns=402 snapshots_per_s=3.4608e+06
