@@ -1,6 +1,6 @@
 # Phase 2
 
-Based on Phase1_Submission.zip. Copy `hft/cpp_client` into the team repository.
+Based on Phase1. Copy `hft/cpp_client` into the team repository.
 
 ```bash
 cmake -S hft/cpp_client -B build -DCMAKE_BUILD_TYPE=Release -DHFT_USE_TLS=ON
