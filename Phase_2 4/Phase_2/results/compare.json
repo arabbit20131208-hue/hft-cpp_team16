@@ -1,0 +1,53 @@
+{
+  "machine": "Linux-6.18.44-fc-v185-x86_64-with-glibc2.39 x86_64",
+  "tape": "normal_tape.jsonl",
+  "snapshots": 20000,
+  "warmup": 200,
+  "rounds": 5,
+  "harness_us": {
+    "Phase 1": {
+      "p50": 43.3975,
+      "p90": 54.62430000000001,
+      "p99": 96.5385599999999,
+      "p999": 307.123576000005
+    },
+    "Phase 2 draft": {
+      "p50": 44.187,
+      "p90": 56.45330000000001,
+      "p99": 92.9692099999998,
+      "p999": 408.07610600000453
+    },
+    "Phase 2 final": {
+      "p50": 45.1325,
+      "p90": 55.9521,
+      "p99": 91.18406999999983,
+      "p999": 258.46479700000316
+    }
+  },
+  "in_process": {
+    "decode_ns": {
+      "p50": 10182.0,
+      "p99": 25276.579999999907,
+      "n": 19800
+    },
+    "hot_ns (book+signal+strategy+encode+send)": {
+      "p50": 506.0,
+      "p99": 12582.169999999973,
+      "n": 19800
+    },
+    "encode_ns (ticks with orders)": {
+      "p50": 928.0,
+      "p99": 2789.400000000003,
+      "n": 2253
+    }
+  },
+  "tick_to_order_us": {
+    "p50": 11.753499999999999,
+    "p99": 26.87425,
+    "n": 2276
+  },
+  "summaries": [
+    "[book] snapshots=20000 rejected=0 checked=20000 mid_mismatch=0 spread_mismatch=0",
+    "[queue] aware=1 orders=2276 fills=0 held_near_front=0 cancel_behind_touch=0 cancel_strong_adverse=0 cancel_adverse_far_back=0 ack_timeouts=2273 errors=0"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "machine": "macOS-26.6.2-arm64-arm-64bit arm",
+  "tape": "normal_tape.jsonl",
+  "snapshots": 20000,
+  "warmup": 200,
+  "rounds": 5,
+  "harness_us": {
+    "Phase 1": {
+      "p50": 28.709,
+      "p90": 36.209,
+      "p99": 45.0,
+      "p999": 88.25186600000156
+    },
+    "Phase 2 final": {
+      "p50": 28.917,
+      "p90": 34.833,
+      "p99": 41.91740999999993,
+      "p999": 62.23519200000167
+    }
+  },
+  "in_process": {
+    "decode_ns": {
+      "p50": 2334.0,
+      "p99": 3292.4099999999344,
+      "n": 19800
+    },
+    "hot_ns (book+signal+strategy+encode+send)": {
+      "p50": 83.0,
+      "p99": 3000.0,
+      "n": 19800
+    },
+    "encode_ns (ticks with orders)": {
+      "p50": 375.0,
+      "p99": 1208.0,
+      "n": 2253
+    }
+  },
+  "tick_to_order_us": {
+    "p50": 2.875,
+    "p99": 4.958,
+    "n": 2276
+  },
+  "summaries": [
+    "[book] snapshots=20000 rejected=0 checked=20000 mid_mismatch=0 spread_mismatch=0",
+    "[queue] aware=1 orders=2276 fills=0 held_near_front=0 cancel_behind_touch=0 cancel_strong_adverse=0 cancel_adverse_far_back=0 ack_timeouts=2273 errors=0"
+  ]
+}

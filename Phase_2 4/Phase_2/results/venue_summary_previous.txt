@@ -1,0 +1,19 @@
+Source: user-pasted live AlgoArena output. Full original log was not supplied.
+Two bot processes shared the same log path. The log was detected as binary.
+Exact run duration was not recorded. Not a clean single-process latency benchmark.
+
+Non-empty exit summary:
+[book] snapshots=16245 rejected=4428 checked=10341 mid_mismatch=0 spread_mismatch=0
+[queue] aware=1 orders=34 fills=2 held_near_front=9 cancel_behind_touch=23 cancel_strong_adverse=0 cancel_adverse_far_back=0 ack_timeouts=0 errors=0
+
+Other process:
+[book] snapshots=0 rejected=0 checked=0 mid_mismatch=0 spread_mismatch=0
+[queue] aware=1 orders=0 fills=0 held_near_front=0 cancel_behind_touch=0 cancel_strong_adverse=0 cancel_adverse_far_back=0 ack_timeouts=0 errors=0
+
+Earlier preliminary latency_report.py summary, before final shutdown:
+samples=57 p50_us=107.88 p99_us=142.40 p999_us=152.88 max_us=154.04
+This summary is not a verified post-shutdown summary of the non-empty process.
+
+Rejected fraction: 4428/16245 = 27.26%.
+Neither rejected nor checked: 16245-4428-10341 = 1476.
+Zero mismatches apply only to the 10341 checked snapshots and only to mid/spread.

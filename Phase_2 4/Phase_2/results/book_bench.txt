@@ -1,0 +1,3 @@
+tape=64000 snapshots, 10 levels/side, batch=32, median of 7 runs
+map   p50_ns=436.2 p99_ns=527.3 snapshots_per_s=2240618
+flat  p50_ns=56.0 p99_ns=70.3 snapshots_per_s=17829369

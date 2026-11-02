@@ -1,0 +1,56 @@
+{
+  "queue-aware/1": {
+    "orders": 2455,
+    "cancels": 1621,
+    "fills": 833,
+    "messages": 4076,
+    "markout_ticks": 0.14483173076923078,
+    "fill_rate": 0.33930753564154786,
+    "bot": "[queue] aware=1 orders=2455 fills=833 held_near_front=1 cancel_behind_touch=1473 cancel_strong_adverse=0 cancel_adverse_far_back=148 ack_timeouts=0 errors=0"
+  },
+  "queue-aware/2": {
+    "orders": 2605,
+    "cancels": 1690,
+    "fills": 914,
+    "messages": 4295,
+    "markout_ticks": 0.2415115005476451,
+    "fill_rate": 0.3508637236084453,
+    "bot": "[queue] aware=1 orders=2605 fills=914 held_near_front=4 cancel_behind_touch=1560 cancel_strong_adverse=0 cancel_adverse_far_back=130 ack_timeouts=0 errors=0"
+  },
+  "queue-aware/3": {
+    "orders": 2373,
+    "cancels": 1582,
+    "fills": 791,
+    "messages": 3955,
+    "markout_ticks": 0.26991150442477874,
+    "fill_rate": 0.3333333333333333,
+    "bot": "[queue] aware=1 orders=2373 fills=791 held_near_front=2 cancel_behind_touch=1425 cancel_strong_adverse=0 cancel_adverse_far_back=157 ack_timeouts=0 errors=0"
+  },
+  "queue-blind/1": {
+    "orders": 2539,
+    "cancels": 1670,
+    "fills": 868,
+    "messages": 4209,
+    "markout_ticks": 0.18317972350230416,
+    "fill_rate": 0.34186687672311933,
+    "bot": "[queue] aware=0 orders=2539 fills=868 held_near_front=0 cancel_behind_touch=1527 cancel_strong_adverse=0 cancel_adverse_far_back=143 ack_timeouts=0 errors=0"
+  },
+  "queue-blind/2": {
+    "orders": 2513,
+    "cancels": 1636,
+    "fills": 877,
+    "messages": 4149,
+    "markout_ticks": 0.21436716077537057,
+    "fill_rate": 0.3489852765618782,
+    "bot": "[queue] aware=0 orders=2513 fills=877 held_near_front=0 cancel_behind_touch=1504 cancel_strong_adverse=0 cancel_adverse_far_back=132 ack_timeouts=0 errors=0"
+  },
+  "queue-blind/3": {
+    "orders": 2364,
+    "cancels": 1576,
+    "fills": 787,
+    "messages": 3940,
+    "markout_ticks": 0.2744599745870394,
+    "fill_rate": 0.3329103214890017,
+    "bot": "[queue] aware=0 orders=2364 fills=787 held_near_front=0 cancel_behind_touch=1416 cancel_strong_adverse=0 cancel_adverse_far_back=160 ack_timeouts=0 errors=0"
+  }
+}
