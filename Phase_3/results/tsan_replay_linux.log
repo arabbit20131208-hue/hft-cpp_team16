@@ -1,0 +1,42 @@
+LAT AMD 2744.805
+LAT AAPL 2666.933
+LAT MSFT 2552.472
+LAT META 2364.995
+LAT AMZN 2272.743
+LAT GOOG 1137.615
+LAT NVDA 1002.162
+LAT AAPL 751.840
+LAT AMZN 1924.601
+LAT TSLA 1063.289
+LAT TSLA 958.837
+LAT NVDA 4180.530
+LAT AMZN 1394.819
+LAT AAPL 1119.386
+LAT AMD 1548.600
+LAT AMZN 2503.585
+LAT GOOG 2414.842
+LAT META 1859.184
+LAT AAPL 1422.099
+LAT TSLA 1241.265
+LAT AAPL 2365.860
+LAT AMD 1706.236
+LAT META 1349.327
+LAT AMZN 1256.898
+LAT NVDA 624.097
+LAT AMZN 1307.172
+LAT AMD 917.663
+LAT META 1632.302
+LAT AMZN 2380.946
+LAT NVDA 2041.030
+LAT META 853.502
+LAT AMZN 2118.700
+LAT AMZN 619.707
+LAT TSLA 2074.730
+LAT META 1991.477
+[pipeline] events=40000 max_backlog=54 dropped_books=0 send_thread=1 cores=-1,-1,-1
+[quota] order_quota=6 window_ms=1000 max_used_in_window=5 skipped=14145
+[book] snapshots=40000 rejected=0 checked=40000 mid_mismatch=0 spread_mismatch=0
+[book] unchecked: one_sided=0 no_mid=0 no_slot=0 decoder_dropped=0
+[book] clipped_snapshots=0 clipped_levels=0
+[book] rejected by reason: too_deep=0 bad_size=0 off_grid=0 span=0 duplicate=0 locked=0 crossed=0
+[queue] aware=1 orders=35 fills=0 held_near_front=0 cancel_behind_touch=0 cancel_strong_adverse=0 cancel_adverse_far_back=0 ack_timeouts=35 errors=0

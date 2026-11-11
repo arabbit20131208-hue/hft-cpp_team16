@@ -1,0 +1,155 @@
+{
+  "machine": "macOS-26.6.2-arm64-arm-64bit / arm / 14 logical CPUs",
+  "spsc": {
+    "correctness": [
+      "RESULT|basic|pass|push/pop/empty behave",
+      "RESULT|empty_pop|pass|pop on empty returns false",
+      "RESULT|full|pass|filled 64 then push=false, full()=true",
+      "RESULT|fifo|pass|FIFO order preserved over 1000 values",
+      "RESULT|wrap|pass|wrap-around correct over 200k cycles"
+    ],
+    "concurrency": [
+      "RESULT|concurrent|pass|moved 2000000 items in FIFO order across threads"
+    ],
+    "throughput_ops_per_s_median_of_5": 34946197,
+    "tsan_warnings": 0
+  },
+  "ctest": "release and tsan builds: all tests passed",
+  "tsan_bot_replay": {
+    "warnings": 0,
+    "pipeline": [
+      "[pipeline] events=40000 max_backlog=4 dropped_books=0 send_thread=1 cores=-1,-1,-1"
+    ]
+  },
+  "tsan_bot_live": "exit=0 snapshots_sent=5000 events=6099 dropped_books=0 orders=824 acks=824 fills=274 tsan_warnings=0",
+  "lockstep": {
+    "Phase 2": {
+      "p50": 27.834,
+      "p90": 31.834,
+      "p99": 38.834,
+      "p999": 55.16743300000078
+    },
+    "Phase 3": {
+      "p50": 28.875,
+      "p90": 35.958,
+      "p99": 43.416,
+      "p999": 63.25844200000004
+    }
+  },
+  "paced": [
+    {
+      "build": "Phase 2",
+      "rate": 5000,
+      "achieved": 5000.0,
+      "p50": 31.67,
+      "p90": 37.62,
+      "p99": 51.33,
+      "p99.9": 137.29,
+      "max": 798.71,
+      "final_lag": 34.17
+    },
+    {
+      "build": "Phase 3",
+      "rate": 5000,
+      "achieved": 5000.0,
+      "p50": 35.08,
+      "p90": 41.25,
+      "p99": 56.0,
+      "p99.9": 2710.12,
+      "max": 7029.88,
+      "final_lag": 43.67
+    },
+    {
+      "build": "Phase 2",
+      "rate": 10000,
+      "achieved": 10000.0,
+      "p50": 31.17,
+      "p90": 37.08,
+      "p99": 60.38,
+      "p99.9": 128.5,
+      "max": 347.21,
+      "final_lag": 34.92
+    },
+    {
+      "build": "Phase 3",
+      "rate": 10000,
+      "achieved": 10000.0,
+      "p50": 36.12,
+      "p90": 41.79,
+      "p99": 52.58,
+      "p99.9": 94.54,
+      "max": 834.71,
+      "final_lag": 33.42
+    },
+    {
+      "build": "Phase 2",
+      "rate": 20000,
+      "achieved": 20000.0,
+      "p50": 35.67,
+      "p90": 38.38,
+      "p99": 48.54,
+      "p99.9": 119.17,
+      "max": 222.58,
+      "final_lag": 39.54
+    },
+    {
+      "build": "Phase 3",
+      "rate": 20000,
+      "achieved": 20000.0,
+      "p50": 36.62,
+      "p90": 42.75,
+      "p99": 53.92,
+      "p99.9": 83.38,
+      "max": 356.88,
+      "final_lag": 30.08
+    },
+    {
+      "build": "Phase 2",
+      "rate": 40000,
+      "achieved": 39996.0,
+      "p50": 172.79,
+      "p90": 15905.67,
+      "p99": 19189.71,
+      "p99.9": 19733.08,
+      "max": 19760.75,
+      "final_lag": 131.33
+    },
+    {
+      "build": "Phase 3",
+      "rate": 40000,
+      "achieved": 39999.0,
+      "p50": 46.29,
+      "p90": 3377.12,
+      "p99": 4274.17,
+      "p99.9": 4299.29,
+      "max": 4333.83,
+      "final_lag": 43.62
+    },
+    {
+      "build": "Phase 2",
+      "rate": 0,
+      "achieved": 39985.0,
+      "p50": 6167.04,
+      "p90": 7840.42,
+      "p99": 8419.29,
+      "p99.9": 8536.67,
+      "max": 8637.79,
+      "final_lag": 4629.38
+    },
+    {
+      "build": "Phase 3",
+      "rate": 0,
+      "achieved": 46420.0,
+      "p50": 5319.42,
+      "p90": 6713.25,
+      "p99": 7221.29,
+      "p99.9": 7675.96,
+      "max": 7948.0,
+      "final_lag": 3943.79
+    }
+  ],
+  "quota": [
+    "[pipeline] events=40000 max_backlog=3 dropped_books=0 send_thread=1 cores=-1,-1,-1",
+    "[quota] order_quota=6 window_ms=1000 max_used_in_window=5 skipped=14235"
+  ]
+}

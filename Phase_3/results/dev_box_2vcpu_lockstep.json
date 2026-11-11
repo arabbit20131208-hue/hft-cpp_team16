@@ -1,0 +1,50 @@
+{
+  "machine": "Linux-6.18.44-fc-v310-x86_64-with-glibc2.39 x86_64",
+  "tape": "busy.jsonl",
+  "snapshots": 40000,
+  "warmup": 200,
+  "rounds": 5,
+  "harness_us": {
+    "Phase 2": {
+      "p50": 48.7595,
+      "p90": 59.613,
+      "p99": 102.44125000000005,
+      "p999": 224.31594300000592
+    },
+    "Phase 3": {
+      "p50": 75.65100000000001,
+      "p90": 156.2621,
+      "p99": 218.2205200000003,
+      "p999": 859.4922520000343
+    }
+  },
+  "in_process": {
+    "decode_ns": {
+      "p50": 6483.0,
+      "p99": 19876.14000000003,
+      "n": 39800
+    },
+    "hot_ns (book+signal+strategy+encode+send)": {
+      "p50": 471.0,
+      "p99": 3591673.2100000004,
+      "n": 39800
+    },
+    "encode_ns (ticks with orders)": {
+      "p50": 552.0,
+      "p99": 12098.350000000275,
+      "n": 39800
+    }
+  },
+  "tick_to_order_us": {
+    "p50": 369.3805,
+    "p99": 3590.25823,
+    "n": 10
+  },
+  "summaries": [
+    "[book] snapshots=40000 rejected=0 checked=40000 mid_mismatch=0 spread_mismatch=0",
+    "[book] unchecked: one_sided=0 no_mid=0 no_slot=0 decoder_dropped=0",
+    "[book] clipped_snapshots=0 clipped_levels=0",
+    "[book] rejected by reason: too_deep=0 bad_size=0 off_grid=0 span=0 duplicate=0 locked=0 crossed=0",
+    "[queue] aware=1 orders=10 fills=0 held_near_front=0 cancel_behind_touch=0 cancel_strong_adverse=0 cancel_adverse_far_back=0 ack_timeouts=10 errors=0"
+  ]
+}
