@@ -1,127 +1,91 @@
-# AlgoArena — HFT C++ Client
+# Team 16 HFT client — Phase 4: gateway + strategy processes
 
-A C++17 trading-bot skeleton for the **HFT variant** of the course. You write
-your strategy in C++ (for speed); it connects to the **existing Python
-exchange** over the **same JSON-over-WebSocket protocol** the Python bots use.
-Nothing on the exchange side changes — an HFT bot and a Python bot are
-indistinguishable on the wire.
-
-The graded axis of this variant is **tick-to-order latency**: how fast your bot
-turns an inbound `book_snapshot` into an outbound `place_order`. The skeleton
-measures it for you (see *Latency instrumentation* below).
-
-## Layout
+This directory is our current bot. It is two processes that talk over lock-free
+rings in POSIX shared memory:
 
 ```
-hft/cpp_client/
-├── CMakeLists.txt              # FetchContent: IXWebSocket + nlohmann/json
-├── include/
-│   ├── arena_client.hpp        # transport + protocol codec (plumbing)
-│   └── hft_bot.hpp             # HFTBot base class — the hooks you override
-├── src/
-│   ├── arena_client.cpp        # WebSocket + JSON (matches shared/messages.py)
-│   └── main.cpp                # ← YOUR STRATEGY LIVES HERE (SpreadCaptureBot)
-└── README.md
+            arena (WebSocket, JSON)
+                    │  ▲
+     book_snapshot  │  │ place_order / cancel_order
+                    ▼  │
+ ┌──────────────── hft_bot = Gateway process ───────────────────┐
+ │ rx thread: decode → InMsg   tx thread: OutMsg → encode, send  │
+ │ supervisor: start / watch / restart strategy, kill switch     │
+ └──────┬──────────────────────────────────────────────▲────────┘
+        │ in  ring  ShmSpsc<InMsg,1024>    (shm_open    │ out ring  ShmSpsc<OutMsg,1024>
+        │ book updates, acks, fills, resync  + mmap)    │ order intents (+ replay "done")
+ ┌──────▼──────────────── strategy process ─────────────┴────────┐
+ │ QueueStrategy: local book, EWMA signal, queue-aware quoting,   │
+ │ order_quota                                                    │
+ └────────────────────────────────────────────────────────────────┘
 ```
 
-## Dependencies
+The arena still sees one client (the gateway). The strategy has no socket. If
+the strategy crashes or hangs, the gateway does three things:
+1. keeps the connection,
+2. cancels our resting orders,
+3. starts a new strategy and resyncs its positions.
 
-Both are fetched automatically at configure time via CMake `FetchContent` — you
-do **not** need to install anything system-wide:
+Design, measurements and the isolation-vs-latency analysis are in
+[`Phase_4/Phase4_Report.md`](../../Phase_4/Phase4_Report.md). Earlier phases are
+kept in `Phase_1/`…`Phase_3/`.
 
-| Library | Why | Pinned tag |
-|---|---|---|
-| [IXWebSocket](https://github.com/machinezone/IXWebSocket) | WebSocket client, background receive/reconnect thread | `v11.4.5` |
-| [nlohmann/json](https://github.com/nlohmann/json) | Header-only JSON encode/decode | `v3.11.3` |
+## Files
 
-A C++17 compiler, CMake ≥ 3.16, and network access for the first configure are
-all you need.
+| Path | What |
+|---|---|
+| `../../include/shm_ring.hpp` | `ShmSpsc<T,N>` cross-process ring (claim/commit, peek/release) + the CI `ShmRing` |
+| `include/shm_layout.hpp` | `InMsg` / `OutMsg` (fixed-size POD), `Control` block, `Region`, `Mapping` (shm_open + mmap) |
+| `src/gateway.cpp` | Gateway process → `hft_bot` |
+| `src/strategy.cpp` | Strategy process → `strategy` |
+| `include/queue_strategy.hpp` | the trading logic (Phases 2–3), transport-independent |
+| `include/local_book.hpp`, `quote_policy.hpp`, `quota.hpp`, `fast_codec.hpp`, `spin.hpp` | book, queue policy, order quota, JSON codec, spin/clock/histogram |
+| `launch.sh` | build if needed, then start (live, `--replay`, `--no-spawn`, `strategy`) |
+| `tests/` | `book_test`, `shm_test` (cross-process, consumer kill/restart), `replay_test.py` (two-process replay), `resilience_test.py` (SIGKILL + SIGSTOP the strategy live) |
+| `tools/` | `shm_ipc_bench` (one-way / round-trip / throughput), `tape_driver` (paced open-loop replay) |
 
-## Build
+## Build and test
 
 ```bash
-cd hft/cpp_client
-cmake -B build
-cmake --build build
+cmake -S hft/cpp_client -B build_phase4 -DCMAKE_BUILD_TYPE=Release -DHFT_USE_TLS=ON
+cmake --build build_phase4 -j
+pip install websockets                       # for the live crash test
+ctest --test-dir build_phase4 --output-on-failure
+
+# ThreadSanitizer build (both processes and IXWebSocket instrumented)
+cmake -S hft/cpp_client -B build_tsan -DHFT_TSAN=ON && cmake --build build_tsan -j
+ctest --test-dir build_tsan
 ```
-
-This produces one executable: `build/hft_bot`.
-
-The first configure clones the two dependencies (needs internet); later builds
-are offline.
 
 ## Run
 
-The client reads the **same environment variables** as `trader/config.py`:
+```bash
+./hft/cpp_client/launch.sh                       # live: gateway starts the strategy
+./hft/cpp_client/launch.sh --replay < tape.jsonl # offline, one output line per input line
+```
+
+Kill demo (two terminals):
+
+```bash
+./hft/cpp_client/launch.sh --no-spawn            # terminal 1: gateway only, waits for a strategy
+./hft/cpp_client/launch.sh strategy              # terminal 2: start, Ctrl-C / kill -9, start again
+```
+
+In the default mode the gateway does this by itself: `kill -9 $(pgrep -f build_phase4/strategy)`.
+It logs `strategy lost (killed by signal)` and then `strategy back (epoch N) … ms after the loss`.
+
+Settings (environment):
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `TEAM_ID` | `hft_alpha` | Your team identifier (sent in the handshake) |
-| `EXCHANGE_HOST` | `localhost` | Exchange hostname |
-| `EXCHANGE_PORT` | `8765` | Exchange port |
-| `EXCHANGE_URL` | *(unset)* | Full URL; **overrides** host/port (e.g. `wss://feed.arena.example.edu`) |
-| `ARENA_TOKEN` | *(empty)* | Team token for hosted (AUTH_REQUIRED) play |
-| `ARENA_LEVEL` | `1` | Handshake unlock level |
+| `TEAM_ID`, `EXCHANGE_URL`, `ARENA_TOKEN`, `ARENA_LEVEL` | | venue (also read from `.env`) |
+| `ORDER_QUOTA` / `ORDER_QUOTA_MS` | 6 / 1000 | messages per window; the last one is kept for cancels (0 = off) |
+| `TICK_SIZE`, `QUEUE_AWARE` | 0.01 / 1 | as in Phase 2 |
+| `HFT_SHM` | `/hft16_<gateway pid>` | shared-memory name (`/hft_team16` with `--no-spawn`) |
+| `STRATEGY_BIN` | `strategy` next to `hft_bot` | strategy executable the gateway starts |
+| `STRATEGY_CORE`, `IDLE_SPINS` | unset / 4096 | pin the strategy (Linux); spins before an idle thread yields |
 
-Local play against a locally running exchange:
-
-```bash
-TEAM_ID=hft_alpha EXCHANGE_HOST=localhost EXCHANGE_PORT=8765 ./build/hft_bot
-```
-
-The bot connects, sends the handshake, and **waits for `SESSION_OPEN`** before
-trading — exactly like the Python trader. Fire the session from the teacher
-dashboard and you will see fills and latency samples stream to stderr. Ctrl-C
-shuts down cleanly.
-
-### Hosted / TLS (`wss://`)
-
-`wss://` needs a TLS-enabled build. Reconfigure with:
-
-```bash
-cmake -B build -DHFT_USE_TLS=ON
-cmake --build build
-EXCHANGE_URL=wss://feed.arena.example.edu ARENA_TOKEN=... ./build/hft_bot
-```
-
-TLS uses the platform-native backend (Secure Transport on macOS, OpenSSL
-elsewhere), so no extra package is required on most systems.
-
-## Where you write your strategy
-
-Everything you edit is in **`src/main.cpp`**, in the `SpreadCaptureBot` class.
-The ships-with-it example is a simple spread-capture / momentum bot so the
-binary does something out of the box — replace it with your edge. The hooks
-(declared in `include/hft_bot.hpp`) are marked with `TODO(student)`:
-
-- `on_book(symbol, bid, ask, mid, microprice, obi)` — a top-of-book update arrived (microprice and order-book imbalance are pre-computed for you). **Send
-  orders from here** and they are automatically latency-timed. This is the
-  hot path and your main surface.
-- `on_fill(side, symbol, qty, price)` — a fill involving you landed.
-- `on_session(event, message)` — session lifecycle + market events
-  (`SESSION_OPEN`, `SESSION_CLOSED`, `SHOCK`, `CALENDAR`, …).
-
-Order helpers to call from the hooks:
-`buy_limit` / `sell_limit` / `buy_market` / `sell_market` / `cancel_order`.
-You never touch raw JSON — the client serializes the exact `PlaceOrder` /
-`CancelOrder` shape the Python engine expects.
-
-You should **not** need to edit `arena_client.*` or the non-strategy parts of
-`hft_bot.hpp` — that is transport plumbing.
-
-## Latency instrumentation
-
-The instant a `book_snapshot` frame is decoded, the client stamps a
-`std::chrono::steady_clock` timepoint. When you send an order from inside
-`on_book()`, the elapsed **microseconds from snapshot-arrival to order-send** is
-recorded and printed to stderr:
-
-```
-[latency] tick->order = 37 us
-...
-[latency] n=50 avg=41 min=29 max=118 us
-```
-
-A running summary (count / avg / min / max) prints every 50 samples. Override
-`record_latency(long long micros)` in your bot if you want a finer histogram or
-to log samples to a file for the graded report.
+On exit the gateway prints `[gateway]`, `[ipc] out-ring` and tick-to-trade lines.
+The strategy prints `[strategy]`, `[ipc] in-ring`, `[quota]`, `[book]` and `[queue]` lines.
+`--profile` adds one `PROF` line per order with six fields: gateway decode,
+in-ring hop, strategy, out-ring hop, encode+send, and total (ns).

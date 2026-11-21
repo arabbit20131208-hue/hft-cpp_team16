@@ -1,0 +1,7 @@
+shm_ipc_bench: n=200000 pace=10000 ns, InMsg=1344 B
+one-way    16 B           n=190000 p50=83 p90=292 p99=5435791 p99.9=9536041 max=10006041 ns
+one-way    InMsg 1344 B   n=190000 p50=84 p90=84 p99=2750 p99.9=8116500 max=10002625 ns
+rtt/2      16 B           n=190000 p50=41 p90=42 p99=62 p99.9=83 max=3937 ns
+rtt/2      InMsg 1344 B   n=190000 p50=62 p90=62 p99=83 p99.9=104 max=7145 ns
+flat-out   16 B           n=2000000 53184063 msgs/s (851 MB/s)
+flat-out   InMsg 1344 B   n=200000 29819774 msgs/s (40078 MB/s)

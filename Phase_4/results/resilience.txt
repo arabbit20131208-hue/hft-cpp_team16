@@ -1,0 +1,11 @@
+exit=0 venue_connections=1 killed_pid=89292 new_pid=89294 detected="killed by signal" recovery_ms=57.7 resting_at_kill=3 killswitch_cancels=3 venue_cancels_within_500ms=23 orders_before_kill=97 orders_after_recovery=96 shm_left=False
+hang: hung_pid=89293 detected="heartbeat timeout" recovery_ms=55.1 orders_after=85
+resilience_test: strategy SIGKILL and hang (SIGSTOP) both survived; the gateway kept its connection, cancelled resting orders, restarted the strategy and resumed trading.
+
+exit=0 venue_connections=1 killed_pid=89302 new_pid=89304 detected="killed by signal" recovery_ms=52.9 resting_at_kill=3 killswitch_cancels=3 venue_cancels_within_500ms=25 orders_before_kill=97 orders_after_recovery=97 shm_left=False
+hang: hung_pid=89303 detected="heartbeat timeout" recovery_ms=54.0 orders_after=85
+resilience_test: strategy SIGKILL and hang (SIGSTOP) both survived; the gateway kept its connection, cancelled resting orders, restarted the strategy and resumed trading.
+
+exit=0 venue_connections=1 killed_pid=89307 new_pid=89309 detected="killed by signal" recovery_ms=52.9 resting_at_kill=3 killswitch_cancels=3 venue_cancels_within_500ms=24 orders_before_kill=97 orders_after_recovery=97 shm_left=False
+hang: hung_pid=89308 detected="heartbeat timeout" recovery_ms=56.0 orders_after=85
+resilience_test: strategy SIGKILL and hang (SIGSTOP) both survived; the gateway kept its connection, cancelled resting orders, restarted the strategy and resumed trading.

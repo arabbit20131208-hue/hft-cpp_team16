@@ -1,0 +1,14 @@
+[gateway] shm /hft16_89311 (1472 KB); waiting for strategy
+[strategy] pid 89312 attached to /hft16_89311 (epoch 1)
+[book] snapshots=40000 rejected=0 checked=40000 mid_mismatch=0 spread_mismatch=0
+[book] unchecked: one_sided=0 no_mid=0 no_slot=0
+[book] clipped_snapshots=0 clipped_levels=0
+[book] rejected by reason: too_deep=0 bad_size=0 off_grid=0 span=0 duplicate=0 locked=0 crossed=0
+[queue] aware=1 orders=70 fills=0 held_near_front=0 cancel_behind_touch=0 cancel_strong_adverse=0 cancel_adverse_far_back=0 ack_timeouts=70 errors=0
+[strategy] messages=40000 gaps=0 stale_books_skipped=0
+[quota] order_quota=6 window_ms=1000 max_used_in_window=5 skipped=14013
+[ipc] in-ring one-way n=40000 p50=192 p90=512 p99=768 p99.9=2112 ns
+[gateway] frames=40000 books_pushed=40000 dropped_ring_full=0 dropped_strategy_down=0 orders_sent=70 lost_lines=0
+[gateway] strategy_restarts=0 killswitch_cancels=0 last_recovery_ms=0.0
+[ipc] out-ring one-way n=70 p50=384 p90=544 p99=1184 p99.9=1184 ns
+[gateway] tick-to-trade (decode -> order handed to socket/output) n=70 p50=105696 p90=117760 p99=125888 p99.9=125888 ns
